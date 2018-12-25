@@ -6,10 +6,13 @@
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-scripts": "2.0.4",
-    "truffle-hdwallet-provider": "0.0.6",
-    "web3": "^1.0.0-beta.26"
+    "truffle": "^4.1.14",
+    "truffle-hdwallet-provider": "0.0.7-beta.1",
+    "truffle-hdwallet-provider-privkey": "^0.3.0",
+    "web3": "^1.0.0-beta.37"
   },
   "scripts": {
+
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

@@ -12,7 +12,10 @@ state = {
   currentIndex:'',
   value:'',
   message:'',
-  retriveIndex:''
+  retriveIndex:'',
+  error1:'',
+  txnCount:''
+
 };
  async componentDidMount() {
 
@@ -24,11 +27,16 @@ const fileData = await lottery.methods.data(currentIndex-1).call();
 const accounts = await web3.eth.getAccounts();
 
 const yourBalance = await web3.eth.getBalance(accounts[0]);
+const txnCount =await web3.eth.getTransactionCount(accounts[0],"pending")
 
-this.setState({yourBalance,fileData,currentIndex});
+this.setState({yourBalance,fileData,currentIndex,txnCount});
 
-console.log('currentIndex' + currentIndex)
-console.log('balance is' + yourBalance);
+
+
+
+console.log('no of transections ' + txnCount)
+console.log('currentIndex ' + currentIndex)
+console.log('balance is ' + yourBalance);
 
 }
 
@@ -39,7 +47,22 @@ onSubmit = async (event) => {
 console.log("in onSubmit");
   this.setState({message:'waiting on transection success...'});
   const accounts = await web3.eth.getAccounts();
-  await lottery.methods.setdata(this.state.value).send({from:accounts[0]});
+
+  var txnCount =await web3.eth.getTransactionCount(accounts[0],"pending")
+  this.setState({txnCount})
+
+console.log('no of transections'+this.state.txnCount)
+
+  try{
+  await lottery.methods.setdata(this.state.value).send({from:accounts[0]//,nonce:8//,gasPrice:'2'
+    //,nonce: web3.utils.toHex(this.state.txnCount+2)
+  
+  });
+  }
+ catch(e){
+alert(e)
+//this.setState({error1:e})
+  }
   this.setState({message:'Successfully saved'});
 
 var  currentIndex = await lottery.methods.revisionNo().call();
@@ -80,6 +103,7 @@ onChange ={event => this.setState({value:event.target.value})}
 </div>
 <button>Enter </button>
 <h1> {this.state.message} </h1>
+<h2>{this.state.error1} </h2>
         </form>
 
 
