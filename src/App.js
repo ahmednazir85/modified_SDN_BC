@@ -14,22 +14,25 @@ state = {
   message:'',
   retriveIndex:'',
   error1:'',
-  txnCount:''
+  txnCount:'',
+  retriveTime:''
 
 };
  async componentDidMount() {
 
 
 console.log('in componentditMount');
+console.log(process.env.API_ADDRESS)
 
 const currentIndex = await lottery.methods.revisionNo().call();
 const fileData = await lottery.methods.data(currentIndex-1).call();
+var retriveTime = await lottery.methods.timestamp(currentIndex-1).call();
 const accounts = await web3.eth.getAccounts();
 
 const yourBalance = await web3.eth.getBalance(accounts[0]);
 const txnCount =await web3.eth.getTransactionCount(accounts[0],"pending")
 
-this.setState({yourBalance,fileData,currentIndex,txnCount});
+this.setState({yourBalance,fileData,currentIndex,txnCount,retriveTime});
 
 
 
@@ -37,6 +40,7 @@ this.setState({yourBalance,fileData,currentIndex,txnCount});
 console.log('no of transections ' + txnCount)
 console.log('currentIndex ' + currentIndex)
 console.log('balance is ' + yourBalance);
+console.log("address" + process.env.API_ADDRESS)
 
 }
 
@@ -49,12 +53,13 @@ console.log("in onSubmit");
   const accounts = await web3.eth.getAccounts();
 
   var txnCount =await web3.eth.getTransactionCount(accounts[0],"pending")
+  
   this.setState({txnCount})
 
 console.log('no of transections'+this.state.txnCount)
 
   try{
-  await lottery.methods.setdata(this.state.value).send({from:accounts[0]//,nonce:8//,gasPrice:'2'
+  await lottery.methods.setdata(this.state.value , "time").send({from:accounts[0]//,nonce:8//,gasPrice:'2'
     //,nonce: web3.utils.toHex(this.state.txnCount+2)
   
   });
@@ -76,13 +81,16 @@ onRetrive = async (event) => {
 
   event.preventDefault();
   var retriveData = await lottery.methods.data(this.state.retriveIndex).call();
+  var retriveTime = await lottery.methods.timestamp(this.state.retriveIndex).call();
   this.setState({fileData:retriveData});
+  this.setState({retriveTime:retriveTime})
 
 
 };
 
   render() {
     console.log('In Rander')
+    console.log("address" + process.env.API_ADDRESS)
 
       return (
 
@@ -123,8 +131,9 @@ current Revision = {this.state.currentIndex -1}
         <button> Retrive </button>
                 </form>
 
-
-          Revision is {this.state.fileData}
+          Rivision time is: {this.state.retriveTime}
+         <br></br>
+          Revision is: {this.state.fileData}
           </p>
           <hr />
 
