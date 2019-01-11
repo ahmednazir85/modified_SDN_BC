@@ -59,7 +59,7 @@ console.log("in onSubmit");
 console.log('no of transections'+this.state.txnCount)
 
   try{
-  await lottery.methods.setdata(this.state.value , "time").send({from:accounts[0]//,nonce:8//,gasPrice:'2'
+  await lottery.methods.setdata(JSON.stringify(this.state.value) , "January 10,2018 10:15").send({from:accounts[0]//,nonce:8//,gasPrice:'2'
     //,nonce: web3.utils.toHex(this.state.txnCount+2)
   
   });
@@ -132,6 +132,7 @@ current Revision = {this.state.currentIndex -1}
                 </form>
 
           Rivision time is: {this.state.retriveTime}
+         <br></br>
          <br></br>
           Revision is: {this.state.fileData}
           </p>
